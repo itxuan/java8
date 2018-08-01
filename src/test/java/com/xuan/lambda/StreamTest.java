@@ -181,6 +181,12 @@ public class StreamTest {
                 .collect(Collectors.toSet())
                 .forEach(System.out::println);
 
+        //存到特殊的集合中去
+        list.stream()
+                .map(Student::getAge)
+                .collect(Collectors.toCollection(LinkedHashSet::new))
+                .forEach(System.out::println);
+
         //R collect(Supplier supplier, BiConsumer accumulator, BiConsumer combiner)
         //supplier：一个能创造目标类型实例的方法。
         // accumulator：一个将当元素添加到目标中的方法。
