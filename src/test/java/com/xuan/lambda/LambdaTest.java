@@ -105,7 +105,7 @@ public class LambdaTest {
     @Test
     public void test4(){
 
-        Comparator<Integer> comparator = (x,y) ->   Math.abs(x-y);
+        Comparator<Integer> comparator = (x,y) -> Math.abs(x-y);
         System.out.println(comparator.compare(10,12));
     }
 
