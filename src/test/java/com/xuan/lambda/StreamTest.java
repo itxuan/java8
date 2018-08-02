@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -198,4 +199,39 @@ public class StreamTest {
         list.stream().collect(HashMap::new ,((hashMap, student) -> hashMap.put(student.getId(),student.getName())), Map::putAll)
                 .forEach((k,v)->System.out.println("k = " + k +",v = " + v));
     }
+
+    //分组 分片 多级分组 统计
+
+    @Test
+    public void test7(){
+
+        //分组
+        Map<Integer, List<Student>> collect1 = list.stream().collect(Collectors.groupingBy(Student::getAge));
+        collect1.forEach((k,v) -> System.out.println("k=" + k + ",v=" + v ));
+
+        System.out.println("==================================================");
+        //多级分组
+        list.stream()
+                .collect( Collectors.groupingBy(Student::getGender,Collectors.groupingBy((s) ->{
+            if(s.getAge() >= 18){
+               return "青年";
+            }else {
+                return "未成年";
+            }
+        }))).forEach((k,v) -> System.out.println("k ----" + k + ",v ----- " +v));
+
+        list.stream().collect(Collectors.partitioningBy((t) -> t.getAge() > 20))
+                .forEach((x,y) -> System.out.println("k = "+ x  + "v = " + y));
+
+        System.out.println("==================================================");
+        // 统计
+        IntSummaryStatistics collect = list.stream().collect(Collectors.summarizingInt(Student::getAge));
+        System.out.println(collect.getAverage()+"," + collect.getCount() + "," + collect.getMax() +"," +collect.getSum());
+
+        System.out.println("==================================================");
+        Double collect2 = list.stream().collect(Collectors.averagingInt((x) -> x.getAge()));
+        System.out.println(collect2);
+    }
+
+
 }
