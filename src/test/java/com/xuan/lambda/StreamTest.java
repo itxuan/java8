@@ -16,16 +16,15 @@ import java.util.stream.StreamSupport;
  * @Author: xuanzhongliang
  * @Date: 2018/8/1 10:08  八月
  * @Description:
- *
  * @ModifyBy:
  */
 public class StreamTest {
 
     @Test
-    public void testStream(){
+    public void testStream() {
 
         //底层封装都是StreamSupport.stream()
-        Stream streams = StreamSupport.stream(Spliterators.spliterator(new Object[]{"str"},0) ,false);
+        Stream streams = StreamSupport.stream(Spliterators.spliterator(new Object[]{"str"}, 0), false);
         streams.forEach(System.out::println);
         // 创建流方式一  Collection
         List<Object> list = new ArrayList<>();
@@ -37,7 +36,6 @@ public class StreamTest {
         Stream<String> stream1 = Arrays.stream(new String[]{"a", "b", "c"});
 
 
-
         //
         //创建方式三 通过Stream.of() Stream.iterate()  Stream.generate()等静态方法
         Stream<Student> studentStream = Stream.of(new Student[]{});
@@ -47,11 +45,12 @@ public class StreamTest {
                 .forEach(System.out::println);
         System.out.println("============   分割线   ================");
         Stream.generate(Student::new).limit(3)
-                .forEach(x ->System.out.println(x));
+                .forEach(x -> System.out.println(x));
     }
+
     // ============================stream api 开始
     @Test
-    public void test2(){
+    public void test2() {
 
         List<String> list = new ArrayList<>();
         list.add("aaa");
@@ -72,28 +71,28 @@ public class StreamTest {
 
     }
 
-    public static Stream<Character> filterCharacter(String s){
+    public static Stream<Character> filterCharacter(String s) {
         Objects.requireNonNull(s);
         List<Character> list = new ArrayList<>();
-        for (Character character :s.toCharArray()){
+        for (Character character : s.toCharArray()) {
             list.add(character);
         }
         return list.stream();
     }
 
     /**
-     *  终止操作：
-     *  allMatch ----> 检查是否全部匹配
-     *  anyMatch ----> 检查是否任意一个匹配
-     *  noneMatch -----> 检查是否都不匹配
-     *  findFirst ----> 返回流中的第一个
-     *  findAny  并行去找 找出符合条件的任意一个
-     *  count  返回流中的数量
-     *  max 返回最大的  需要自定义排序
-     *  min  返回最小的 需要自定义排序
+     * 终止操作：
+     * allMatch ----> 检查是否全部匹配
+     * anyMatch ----> 检查是否任意一个匹配
+     * noneMatch -----> 检查是否都不匹配
+     * findFirst ----> 返回流中的第一个
+     * findAny  并行去找 找出符合条件的任意一个
+     * count  返回流中的数量
+     * max 返回最大的  需要自定义排序
+     * min  返回最小的 需要自定义排序
      */
     @Test
-    public void test3(){
+    public void test3() {
 
         Optional<Student> max = list.stream().max(new StudentComparator());
         System.out.println(max);
@@ -112,36 +111,36 @@ public class StreamTest {
         System.out.println(minAge);
 
     }
+
     @Test
     public void test4() {
 
-        System.out.println(list.stream().allMatch( x -> x.getGender().equals(GenderEnum.WOMAN)));
+        System.out.println(list.stream().allMatch(x -> x.getGender().equals(GenderEnum.WOMAN)));
         System.out.println(list.stream().findAny().get());
-        boolean b = list.stream().anyMatch(x -> x.getAge() >40 );
+        boolean b = list.stream().anyMatch(x -> x.getAge() > 40);
         System.out.println(b);
         System.out.println("-------------------分割线----------------------------");
         Optional<Student> any = list.parallelStream().filter(x -> x.getGender().equals(GenderEnum.WOMAN)).findAny();
         System.out.println(any);
     }
 
-    public class StudentComparator implements Comparator<Student>{
+    public class StudentComparator implements Comparator<Student> {
         @Override
         public int compare(Student o1, Student o2) {
-            if(o1.getAge().equals(o2.getAge())){
+            if (o1.getAge().equals(o2.getAge())) {
                 return o1.getId() - o2.getId();
-            }else {
+            } else {
                 return o1.getAge() - o2.getAge();
             }
         }
     }
 
     List<Student> list = Arrays.asList(new Student[]{
-            new Student(1,"宣总",23,GenderEnum.MAN),
-            new Student(2,"陈总",22,GenderEnum.WOMAN),
-            new Student(3,"吴总",23,GenderEnum.WOMAN),
-            new Student(4,"思颖",2,GenderEnum.WOMAN)
+            new Student(1, "宣总", 23, GenderEnum.MAN),
+            new Student(2, "陈总", 22, GenderEnum.WOMAN),
+            new Student(3, "吴总", 23, GenderEnum.WOMAN),
+            new Student(4, "思颖", 2, GenderEnum.WOMAN)
     });
-
 
 
     // reduce  归并 产生10个随机数 求和
@@ -149,25 +148,26 @@ public class StreamTest {
 
     //  reduce 和 collect 参考网址: https://blog.csdn.net/piglite/article/details/53823584
     @Test
-    public void test5(){
+    public void test5() {
 
-        Stream<Integer> supplier = supplier(10,100,  new Random()::nextInt );
+        Stream<Integer> supplier = supplier(10, 100, new Random()::nextInt);
 //        Integer[] arrs = supplier.toArray(x -> new Integer[x]);
 //        System.out.println(Arrays.toString(arrs));
 
-        Integer reduce = supplier.reduce(0, (x, y) ->{
-             return x + y; });
+        Integer reduce = supplier.reduce(0, (x, y) -> {
+            return x + y;
+        });
         System.out.println(reduce);
 
     }
 
 
-    public static Stream<Integer> supplier(Integer count,Integer seed,Function<Integer,Integer> supplier){
+    public static Stream<Integer> supplier(Integer count, Integer seed, Function<Integer, Integer> supplier) {
 
         List<Integer> list = new ArrayList<>();
-        for (int i=0; i < count ;i++){
+        for (int i = 0; i < count; i++) {
             Integer integer = supplier.apply(seed);
-            System.out.println("for  "+integer);
+            System.out.println("for  " + integer);
             list.add(integer);
         }
         return list.stream();
@@ -175,7 +175,7 @@ public class StreamTest {
 
     // 收集  收集器  collector  Collector  Collectors
     @Test
-    public void test6(){
+    public void test6() {
 
         list.stream()
                 .map(Student::getName)
@@ -193,40 +193,40 @@ public class StreamTest {
         // accumulator：一个将当元素添加到目标中的方法。
         // combiner：一个将中间状态的多个结果整合到一起的方法（并发的时候会用到 ? 这个以后再说）
         list.stream().map(Student::getAge)
-                .collect(ArrayList::new ,(arrayList,element) -> arrayList.add(element),(list,list1) -> list.addAll(list1))
+                .collect(ArrayList::new, (arrayList, element) -> arrayList.add(element), (list, list1) -> list.addAll(list1))
                 .forEach(System.out::println);
 
-        list.stream().collect(HashMap::new ,((hashMap, student) -> hashMap.put(student.getId(),student.getName())), Map::putAll)
-                .forEach((k,v)->System.out.println("k = " + k +",v = " + v));
+        list.stream().collect(HashMap::new, ((hashMap, student) -> hashMap.put(student.getId(), student.getName())), Map::putAll)
+                .forEach((k, v) -> System.out.println("k = " + k + ",v = " + v));
     }
 
     //分组 分片 多级分组 统计
 
     @Test
-    public void test7(){
+    public void test7() {
 
         //分组
         Map<Integer, List<Student>> collect1 = list.stream().collect(Collectors.groupingBy(Student::getAge));
-        collect1.forEach((k,v) -> System.out.println("k=" + k + ",v=" + v ));
+        collect1.forEach((k, v) -> System.out.println("k=" + k + ",v=" + v));
 
         System.out.println("==================================================");
         //多级分组
         list.stream()
-                .collect( Collectors.groupingBy(Student::getGender,Collectors.groupingBy((s) ->{
-            if(s.getAge() >= 18){
-               return "青年";
-            }else {
-                return "未成年";
-            }
-        }))).forEach((k,v) -> System.out.println("k ----" + k + ",v ----- " +v));
+                .collect(Collectors.groupingBy(Student::getGender, Collectors.groupingBy((s) -> {
+                    if (s.getAge() >= 18) {
+                        return "青年";
+                    } else {
+                        return "未成年";
+                    }
+                }))).forEach((k, v) -> System.out.println("k ----" + k + ",v ----- " + v));
 
         list.stream().collect(Collectors.partitioningBy((t) -> t.getAge() > 20))
-                .forEach((x,y) -> System.out.println("k = "+ x  + "v = " + y));
+                .forEach((x, y) -> System.out.println("k = " + x + "v = " + y));
 
         System.out.println("==================================================");
         // 统计
         IntSummaryStatistics collect = list.stream().collect(Collectors.summarizingInt(Student::getAge));
-        System.out.println(collect.getAverage()+"," + collect.getCount() + "," + collect.getMax() +"," +collect.getSum());
+        System.out.println(collect.getAverage() + "," + collect.getCount() + "," + collect.getMax() + "," + collect.getSum());
 
         System.out.println("==================================================");
         Double collect2 = list.stream().collect(Collectors.averagingInt((x) -> x.getAge()));
